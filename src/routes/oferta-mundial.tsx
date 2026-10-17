@@ -1,3 +1,4 @@
+import { requestIptvCheckout } from "@/lib/checkout";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import {
@@ -15,59 +16,113 @@ import {
   Trophy,
   Globe,
 } from "lucide-react";
-import channelsBundle from "@/assets/channels-bundle.webp.asset.json";
-import poster1 from "@/assets/tvm-aquaman.webp.asset.json";
-import poster2 from "@/assets/tvm-oppenheimer.webp.asset.json";
-import poster3 from "@/assets/tvm-red-one.webp.asset.json";
-import poster4 from "@/assets/tvm-venom-last-dance.webp.asset.json";
-import poster5 from "@/assets/tvm-1QdXdRYfktUSONkl1oD5gc6Be0s.webp.asset.json";
-import poster6 from "@/assets/tvm-36xXlhEpQqVVPuiZhfoQuaY4OlA.webp.asset.json";
-import poster7 from "@/assets/tvm-hE3LRZAY84fG19a18pzpkZERjTE.webp.asset.json";
-import poster8 from "@/assets/tvm-iDHzRALtZCzHVmx7uyjTTKvMAPB.webp.asset.json";
-import testimonial1 from "@/assets/tvm-customer-review-1.webp.asset.json";
-import testimonial2 from "@/assets/tvm-customer-review-2.webp.asset.json";
-import testimonial3 from "@/assets/tvm-customer-review-3.webp.asset.json";
-import testimonial4 from "@/assets/tvm-customer-review-4.webp.asset.json";
-import testimonial5 from "@/assets/tvm-customer-review-5.webp.asset.json";
-import video1 from "@/assets/tvm-video-1.webm.asset.json";
-import video2 from "@/assets/tvm-video-2.webm.asset.json";
-import video3 from "@/assets/tvm-video-3.webm.asset.json";
-import video4 from "@/assets/tvm-video-4.webm.asset.json";
-import video5 from "@/assets/tvm-video-5.webm.asset.json";
-import devSmartTv from "@/assets/tvm-smart-tv-v2.webp.asset.json";
-import devFirestick from "@/assets/tvm-firestick.webp.asset.json";
-import devAppleTv from "@/assets/tvm-apple-tv-box-v2.webp.asset.json";
-import devAndroid from "@/assets/tvm-android.webp.asset.json";
-import devIphone from "@/assets/tvm-iphone-ipad-v2.webp.asset.json";
-import devDator from "@/assets/tvm-dator-v2.webp.asset.json";
-import payVisa from "@/assets/pay-visa.svg.asset.json";
-import payMastercard from "@/assets/pay-mastercard.svg.asset.json";
-import payKlarna from "@/assets/pay-klarna.svg.asset.json";
-import paySwish from "@/assets/pay-swish.svg.asset.json";
-import payPaypal from "@/assets/pay-paypal.svg.asset.json";
-import payAmex from "@/assets/pay-american-express.svg.asset.json";
-import sportPl from "@/assets/tvm-ai-pl.webp.asset.json";
-import sportCl from "@/assets/tvm-ai-cl.webp.asset.json";
-import sportAllsv from "@/assets/tvm-ai-allsvenskan.webp.asset.json";
-import sportShl from "@/assets/tvm-ai-shl.webp.asset.json";
-import sportVinter from "@/assets/tvm-ai-vinter-os.webp.asset.json";
-import sportNations from "@/assets/tvm-ai-nations-cup.webp.asset.json";
-import sportLaliga from "@/assets/tvm-ai-laliga.webp.asset.json";
-import sportBiathlon from "@/assets/tvm-ai-biathlon.webp.asset.json";
-import sportEliteserien from "@/assets/tvm-ai-eliteserien.webp.asset.json";
-import chTv4 from "@/assets/logo-tv4.png.asset.json";
-import chViaplay from "@/assets/logo-viaplay.png.asset.json";
-import chHbo from "@/assets/logo-hbo.png.asset.json";
-import chNetflix from "@/assets/logo-netflix.png.asset.json";
-import chDisney from "@/assets/logo-disney.png.asset.json";
-import chEspn from "@/assets/logo-espn.png.asset.json";
-import chEurosport from "@/assets/logo-eurosport.png.asset.json";
-import chSky from "@/assets/logo-sky.png.asset.json";
-import chPrime from "@/assets/logo-prime.png.asset.json";
-import chDazn from "@/assets/logo-dazn.png.asset.json";
-import chFox from "@/assets/logo-fox.png.asset.json";
-import chAppleTv from "@/assets/logo-appletv.png.asset.json";
-import brandLogo from "@/assets/brand-logo.png.asset.json";
+import channelsBundleAsset from "@/assets/channels-bundle.webp";
+import poster1Asset from "@/assets/aquaman.webp";
+import poster2Asset from "@/assets/oppenheimer.webp";
+import poster3Asset from "@/assets/red-one.webp";
+import poster4Asset from "@/assets/venom-last-dance.webp";
+import poster5Asset from "@/assets/1QdXdRYfktUSONkl1oD5gc6Be0s.webp";
+import poster6Asset from "@/assets/36xXlhEpQqVVPuiZhfoQuaY4OlA.webp";
+import poster7Asset from "@/assets/hE3LRZAY84fG19a18pzpkZERjTE.webp";
+import poster8Asset from "@/assets/iDHzRALtZCzHVmx7uyjTTKvMAPB.webp";
+import testimonial1Asset from "@/assets/customer-review-1.webp";
+import testimonial2Asset from "@/assets/customer-review-2.webp";
+import testimonial3Asset from "@/assets/customer-review-3.webp";
+import testimonial4Asset from "@/assets/customer-review-4.webp";
+import testimonial5Asset from "@/assets/customer-review-5.webp";
+import video1Asset from "@/assets/lifewithlaurenk_TikTokDownloader.com_42a06.webm";
+import video2Asset from "@/assets/meeralakhani_TikTokDownloader.com_1c70b.webm";
+import video3Asset from "@/assets/onthelot_TikTokDownloader.com_b35cd.webm";
+import video4Asset from "@/assets/sabbytatt_TikTokDownloader.com_283a8.webm";
+import video5Asset from "@/assets/zenmaruu_TikTokDownloader.com_d268d.webm";
+import devSmartTvAsset from "@/assets/smart-tv-v2.webp";
+import devFirestickAsset from "@/assets/firestick.webp";
+import devAppleTvAsset from "@/assets/apple-tv-box-v2.webp";
+import devAndroidAsset from "@/assets/android.webp";
+import devIphoneAsset from "@/assets/iphone-ipad-v2.webp";
+import devDatorAsset from "@/assets/dator-v2.webp";
+import payVisaAsset from "@/assets/pay-visa.svg";
+import payMastercardAsset from "@/assets/pay-mastercard.svg";
+import payKlarnaAsset from "@/assets/adf23171-e874-4bb9-a43b-abee958e8973.svg";
+import paySwishAsset from "@/assets/3a877adf-f502-4eab-ba74-a1fa14b9611b.svg";
+import payPaypalAsset from "@/assets/pay-paypal.svg";
+import payAmexAsset from "@/assets/pay-american-express.svg";
+import sportPlAsset from "@/assets/ai-pl.webp";
+import sportClAsset from "@/assets/ai-cl.webp";
+import sportAllsvAsset from "@/assets/ai-allsvenskan.webp";
+import sportShlAsset from "@/assets/ai-shl.webp";
+import sportVinterAsset from "@/assets/ai-vinter-os.webp";
+import sportNationsAsset from "@/assets/ai-nations-cup.webp";
+import sportLaligaAsset from "@/assets/ai-laliga.webp";
+import sportBiathlonAsset from "@/assets/ai-biathlon.webp";
+import sportEliteserienAsset from "@/assets/ai-eliteserien.webp";
+import chTv4Asset from "@/assets/tv4.png";
+import chViaplayAsset from "@/assets/viaplay.png";
+import chHboAsset from "@/assets/hbo.png";
+import chNetflixAsset from "@/assets/netflix.png";
+import chDisneyAsset from "@/assets/disney-plus.png";
+import chEspnAsset from "@/assets/espn.png";
+import chEurosportAsset from "@/assets/eurosport.png";
+import chSkyAsset from "@/assets/sky-sports.png";
+import chPrimeAsset from "@/assets/prime-video.png";
+import chDaznAsset from "@/assets/dazn.png";
+import chFoxAsset from "@/assets/fox.png";
+import chAppleTvAsset from "@/assets/apple-tv.png";
+import brandLogoAsset from "@/assets/brand-logo.png";
+
+const channelsBundle = { url: channelsBundleAsset };
+const poster1 = { url: poster1Asset };
+const poster2 = { url: poster2Asset };
+const poster3 = { url: poster3Asset };
+const poster4 = { url: poster4Asset };
+const poster5 = { url: poster5Asset };
+const poster6 = { url: poster6Asset };
+const poster7 = { url: poster7Asset };
+const poster8 = { url: poster8Asset };
+const testimonial1 = { url: testimonial1Asset };
+const testimonial2 = { url: testimonial2Asset };
+const testimonial3 = { url: testimonial3Asset };
+const testimonial4 = { url: testimonial4Asset };
+const testimonial5 = { url: testimonial5Asset };
+const video1 = { url: video1Asset };
+const video2 = { url: video2Asset };
+const video3 = { url: video3Asset };
+const video4 = { url: video4Asset };
+const video5 = { url: video5Asset };
+const devSmartTv = { url: devSmartTvAsset };
+const devFirestick = { url: devFirestickAsset };
+const devAppleTv = { url: devAppleTvAsset };
+const devAndroid = { url: devAndroidAsset };
+const devIphone = { url: devIphoneAsset };
+const devDator = { url: devDatorAsset };
+const payVisa = { url: payVisaAsset };
+const payMastercard = { url: payMastercardAsset };
+const payKlarna = { url: payKlarnaAsset };
+const paySwish = { url: paySwishAsset };
+const payPaypal = { url: payPaypalAsset };
+const payAmex = { url: payAmexAsset };
+const sportPl = { url: sportPlAsset };
+const sportCl = { url: sportClAsset };
+const sportAllsv = { url: sportAllsvAsset };
+const sportShl = { url: sportShlAsset };
+const sportVinter = { url: sportVinterAsset };
+const sportNations = { url: sportNationsAsset };
+const sportLaliga = { url: sportLaligaAsset };
+const sportBiathlon = { url: sportBiathlonAsset };
+const sportEliteserien = { url: sportEliteserienAsset };
+const chTv4 = { url: chTv4Asset };
+const chViaplay = { url: chViaplayAsset };
+const chHbo = { url: chHboAsset };
+const chNetflix = { url: chNetflixAsset };
+const chDisney = { url: chDisneyAsset };
+const chEspn = { url: chEspnAsset };
+const chEurosport = { url: chEurosportAsset };
+const chSky = { url: chSkyAsset };
+const chPrime = { url: chPrimeAsset };
+const chDazn = { url: chDaznAsset };
+const chFox = { url: chFoxAsset };
+const chAppleTv = { url: chAppleTvAsset };
+const brandLogo = { url: brandLogoAsset };
 
 const POSTERS = [poster1, poster2, poster3, poster4, poster5, poster6, poster7, poster8].map((a) => a.url);
 const SPORTS = [
@@ -276,35 +331,12 @@ function OfertaMundialPage() {
 
   const handleCheckout = async () => {
     try {
-      const response = await fetch(
-        "https://iptv-clocking-00.vercel.app/api/redirect-checkout",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            price: Math.round(total * 100),
-            customerEmail: "",
-            origin: window.location.origin,
-          }),
-        }
-      );
-
-      if (!response.ok) {
-        const error = await response.text();
-        alert(`Error: ${error}`);
-        return;
-      }
-
-      const data = await response.json();
-      if (data.url) {
-        window.location.href = data.url;
-      } else {
-        alert("No se recibió la URL de pago");
-      }
+      window.location.href = await requestIptvCheckout(selected, screens, total);
     } catch (error) {
-      alert(`Error al procesar el pago: ${error instanceof Error ? error.message : String(error)}`);
+      alert(error instanceof Error ? error.message : "No se pudo iniciar el pago.");
     }
   };
+
 
   return (
     <div className="min-h-screen bg-background text-foreground">
